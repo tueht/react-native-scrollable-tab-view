@@ -118,7 +118,13 @@ const ScrollableTabView = createReactClass({
       this.goToPage(props.page);
     }
   },
-
+  componentDidMount(){
+      this.setTimeout(() => {
+    InteractionManager.runAfterInteractions(() => {
+      this.goToPage(this.props.initialPage, false);
+    });
+  }, 0);
+    },
   componentWillUnmount() {
     if (Platform.OS === 'ios'|| this.props.useScrollView) {
       this.state.scrollXIOS.removeAllListeners();
