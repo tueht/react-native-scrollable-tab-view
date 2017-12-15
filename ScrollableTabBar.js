@@ -31,6 +31,7 @@ const ScrollableTabBar = createReactClass({
     renderTab: PropTypes.func,
     underlineStyle: ViewPropTypes.style,
     onScroll: PropTypes.func,
+    makeTabsEqualIfPossible: PropTypes.bool
   },
 
   getDefaultProps() {
@@ -43,6 +44,7 @@ const ScrollableTabBar = createReactClass({
       tabStyle: {},
       tabsContainerStyle: {},
       underlineStyle: {},
+      makeTabsEqualIfPossible: true
     };
   },
 
@@ -100,7 +102,11 @@ const ScrollableTabBar = createReactClass({
     } else {
       const rightBoundScroll = this._tabContainerMeasurements.width - (this._containerMeasurements.width);
       newScrollX = newScrollX > rightBoundScroll ? rightBoundScroll : newScrollX;
-      this._scrollView.scrollTo({x: newScrollX, y: 0, animated: false, });
+      if (containerWidth > WINDOW_WIDTH) {
+        this._scrollView.scrollTo({x: newScrollX, y: 0, animated: false, });
+      } else {
+        this.props.makeTabsEqualIfPossible && this._scrollView.scrollTo({x: newScrollX, y: 0, animated: false, });
+      }
     }
 
   },
@@ -203,7 +209,7 @@ const ScrollableTabBar = createReactClass({
   onTabContainerLayout(e) {
     this._tabContainerMeasurements = e.nativeEvent.layout;
     let width = this._tabContainerMeasurements.width;
-    if (width < WINDOW_WIDTH) {
+    if (this.props.makeTabsEqualIfPossible && width < WINDOW_WIDTH) {
       width = WINDOW_WIDTH;
     }
     this.setState({ _containerWidth: width, });
