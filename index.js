@@ -120,9 +120,7 @@ const ScrollableTabView = createReactClass({
   },
   componentDidMount(){
       this.setTimeout(() => {
-    InteractionManager.runAfterInteractions(() => {
       this.goToPage(this.props.initialPage, false);
-    });
   }, 0);
     },
   componentWillUnmount() {
